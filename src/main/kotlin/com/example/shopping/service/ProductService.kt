@@ -25,12 +25,12 @@ class ProductService (
     fun update(id: Long, request: UpdateProductRequest): Product {
         val product = productRepository.findById(id)
             .orElseThrow { IllegalArgumentException("Product with id $id not found") }
-        val updatedProduct = product.copy(
-            name = request.name,
-            price = request.price,
-            stock = request.stock
-        )
-        return productRepository.save(updatedProduct)
+
+        product.name = request.name
+        product.price = request.price
+        product.stock = request.stock
+
+        return productRepository.save(product)
     }
 
     fun delete(id: Long) {

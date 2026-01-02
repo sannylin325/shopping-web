@@ -8,9 +8,8 @@ import org.hibernate.annotations.SQLRestriction
 @Table(name = "products")
 @SQLRestriction("deleted = false")
 @SQLDelete(sql = "UPDATE products SET deleted = true WHERE id = ?")
-data class Product (
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+class Product (
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     var name: String,
