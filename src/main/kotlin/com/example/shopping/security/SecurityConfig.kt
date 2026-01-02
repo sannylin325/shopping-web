@@ -4,6 +4,8 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
@@ -14,8 +16,15 @@ class SecurityConfig {
         http
             .csrf { it.disable()}  // close CSRF
             .authorizeHttpRequests {
-                it.anyRequest().permitAll()
+                it.requestMatchers("/h2-consule/**").permitAll()
+                    .anyRequest().permitAll()
             }
+            .headers {it.frameOptions { frameOption -> frameOption.disable() }}  // for H2-consule
         return http.build()
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder()
     }
 }

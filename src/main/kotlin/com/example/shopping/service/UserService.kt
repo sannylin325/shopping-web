@@ -3,11 +3,13 @@ package com.example.shopping.service
 import com.example.shopping.dto.RegisterRequest
 import com.example.shopping.entity.User
 import com.example.shopping.repository.UserRepository
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class UserService (
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val passwordEncoder: PasswordEncoder
 ){
     fun register(request: RegisterRequest) {
         if (userRepository.existsByEmail(request.email)) {
@@ -16,7 +18,7 @@ class UserService (
 
         val user = User(
             email = request.email,
-            password = request.password,
+            password = requireNotNull(passwordEncoder.encode(request.password)) { "Password encoding failed" },
             name = request.name
         )
         userRepository.save(user)
