@@ -4,6 +4,7 @@ import com.example.shopping.dto.LoginRequest
 import com.example.shopping.entity.User
 import com.example.shopping.jwt.JwtUtil
 import com.example.shopping.repository.UserRepository
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,19 +43,24 @@ class AuthControllerTest {
         )
     }
 
-    @Test  // test success but haven't solved warnings
+    private data class LoginResponse(val token: String?)
+
+    @Test
     fun `login returns token`() {
         val loginRequest = LoginRequest(email = "test@test.com", password = "123456")
         val result = mockMvc.post("/auth/login") {
             contentType = MediaType.APPLICATION_JSON
             content = objectMapper.writeValueAsString(loginRequest)
         }.andExpect {
-            status {isOk()}
+            status { isOk() }
         }.andReturn()
 
         val responseJson = result.response.contentAsString
-        val token = objectMapper.readTree(responseJson).get("token").asText()
-        println("JWT Token: $token")
+        val response = objectMapper.readValue(responseJson, LoginResponse::class.java)
+        val token = response.token
+
+        Assertions.assertNotNull(token, "Response should contain 'token'")
+        Assertions.assertTrue(token!!.isNotBlank(), "Token should not be blank")
     }
 
 //    @Test  // not test yet

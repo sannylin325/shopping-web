@@ -49,6 +49,9 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+
+    // Make Byte Buddy agent available to tests so we can attach it explicitly.
+    testRuntimeOnly("net.bytebuddy:byte-buddy-agent:1.17.8")
 }
 
 kotlin {
@@ -65,4 +68,17 @@ allOpen {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+
+    // Silence CDS warning: "Sharing is only supported for boot loader classes..."
+    // This can appear when javaagents append to the bootstrap classpath.
+    jvmArgs("-Xshare:off")
+
+    // Explicitly attach Byte Buddy as a Java agent to avoid Mockito self-attaching
+    // (which is warned against and will be restricted by future JDKs).
+    val bbAgent = configurations.testRuntimeClasspath.get().files
+        .firstOrNull { it.name.startsWith("byte-buddy-agent") && it.extension == "jar" }
+
+    if (bbAgent != null) {
+        jvmArgs("-javaagent:${bbAgent.absolutePath}")
+    }
 }
