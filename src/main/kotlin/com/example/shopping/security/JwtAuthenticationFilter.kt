@@ -1,9 +1,9 @@
-package com.example.shopping.jwt
+package com.example.shopping.security
 
 import com.example.shopping.service.CustomUserDetailsService
+import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import jakarta.servlet.FilterChain
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
@@ -11,7 +11,7 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 class JwtAuthenticationFilter (
-    private val jwtUtil: JwtUtil,
+    private val jwtUtil: JwtTokenProvider,
     private val userDetailsService: CustomUserDetailsService
 ) : OncePerRequestFilter() {
     override fun doFilterInternal(

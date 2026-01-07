@@ -1,5 +1,6 @@
-package com.example.shopping.jwt
+package com.example.shopping.security
 
+import com.example.shopping.entity.User
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
@@ -14,13 +15,13 @@ class JwtUtil (
 ){
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
-    fun generateToken(userId: Long, email: String): String{
+    fun generateToken(user: User): String{
         val now = Date()
         val expiry = Date(now.time + expirationMs)
 
         return Jwts.builder()
-            .setSubject(userId.toString())
-            .claim("email", email)
+            .setSubject(user.id!!.toString())
+            .claim("role", user.role.name)
             .setIssuedAt(now)
             .setExpiration(expiry)
             .signWith(secretKey)
@@ -44,4 +45,11 @@ class JwtUtil (
             .build()
             .parseClaimsJws(token)
             .body.subject.toLong()
+    
+    fun getRole(token: String): String =
+        Jwts.parserBuilder()
+            .setSigningKey(secretKey)
+            .build()
+            .parseClaimsJws(token)
+            .body["role"] as String
 }
