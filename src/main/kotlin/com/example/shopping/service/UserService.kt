@@ -1,5 +1,6 @@
 package com.example.shopping.service
 
+import com.example.shopping.auth.Role
 import com.example.shopping.dto.RegisterRequest
 import com.example.shopping.entity.User
 import com.example.shopping.repository.UserRepository

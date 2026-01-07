@@ -2,8 +2,8 @@ package com.example.shopping.controller
 
 import com.example.shopping.dto.LoginRequest
 import com.example.shopping.entity.User
-import com.example.shopping.jwt.JwtUtil
 import com.example.shopping.repository.UserRepository
+import com.example.shopping.security.JwtTokenProvider
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -28,7 +28,7 @@ class AuthControllerTest {
     @Autowired
     lateinit var passwordEncoder: PasswordEncoder
     @Autowired
-    lateinit var jwtUtil: JwtUtil
+    lateinit var jwtUtil: JwtTokenProvider
     lateinit var testUser: User
 
     @BeforeEach

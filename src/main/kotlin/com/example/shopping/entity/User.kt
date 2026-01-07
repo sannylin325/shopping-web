@@ -1,5 +1,6 @@
 package com.example.shopping.entity
 
+import com.example.shopping.auth.Role
 import jakarta.persistence.*
 
 @Entity
@@ -15,5 +16,9 @@ class User (
     var password: String,
 
     @Column(nullable = false)
-    var name: String
+    var name: String,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    val role: Role = Role.ROLE_USER
 )

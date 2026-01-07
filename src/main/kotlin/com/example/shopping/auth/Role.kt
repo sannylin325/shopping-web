@@ -1,4 +1,6 @@
 package com.example.shopping.auth
 
-class Role {
+enum class Role {
+    ROLE_USER,
+    ROLE_ADMIN
 }
