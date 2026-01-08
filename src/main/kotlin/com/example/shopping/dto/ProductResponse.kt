@@ -1,6 +1,7 @@
 package com.example.shopping.dto
 
-data class CreateProductRequest (
+data class ProductResponse (
+    val id: Long,
     val name: String,
     val price: Int,
     val stock: Int,
