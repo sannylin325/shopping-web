@@ -12,9 +12,20 @@ class Product (
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    var name: String,
-    var price: Int,
-    var stock: Int,
+    @Column(nullable = false)
+    val name: String,
 
-    var deleted: Boolean = false
+    @Column(nullable = false)
+    val price: Int,
+
+    val description: String? = null,
+
+    @Column(nullable = false)
+    val stock: Int,
+
+    @Column(nullable = false)
+    val active: Boolean = true,
+
+    @Column(nullable = false)
+    val deleted: Boolean = false
 )

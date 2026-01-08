@@ -10,13 +10,13 @@ class User (
     val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    var email: String,
+    val email: String,
 
     @Column(nullable = false)
-    var password: String,
+    val password: String,
 
     @Column(nullable = false)
-    var name: String,
+    val name: String,
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
