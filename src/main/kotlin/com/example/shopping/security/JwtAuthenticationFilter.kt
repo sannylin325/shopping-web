@@ -23,18 +23,22 @@ class JwtAuthenticationFilter (
         val authHeader = request.getHeader("Authorization")
         if (authHeader?.startsWith("Bearer ") == true) {
             val token = authHeader.substring(7)
-            if (jwtTokenProvider.validate(token)) {
-                val email = jwtTokenProvider.getEmail(token)
-                val userDetails = userDetailsService.loadUserByUsername(email)
+            try {
+                if (jwtTokenProvider.validate(token)) {
+                    val email = jwtTokenProvider.getEmail(token)
+                    val userDetails = userDetailsService.loadUserByUsername(email)
 
-                val role = jwtTokenProvider.getRole(token)
-                val authorities = userDetails.authorities.toMutableList()
-                authorities.add(SimpleGrantedAuthority(role.name))
+                    val role = jwtTokenProvider.getRole(token)
+                    val authorities = userDetails.authorities.toMutableList()
+                    authorities.add(SimpleGrantedAuthority(role.name))
 
-                val auth = UsernamePasswordAuthenticationToken(
-                    userDetails, null, authorities
-                )
-                SecurityContextHolder.getContext().authentication = auth
+                    val auth = UsernamePasswordAuthenticationToken(
+                        userDetails, null, authorities
+                    )
+                    SecurityContextHolder.getContext().authentication = auth
+                }
+            } catch (e:Exception) {  // clear context if token is invalid
+                SecurityContextHolder.clearContext()
             }
         }
         filterChain.doFilter(request, response)
